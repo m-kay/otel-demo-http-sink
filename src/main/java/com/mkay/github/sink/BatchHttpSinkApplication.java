@@ -22,8 +22,12 @@ public class BatchHttpSinkApplication {
 	}
 
 	@Bean
-	public Consumer<Message<List<String>>> batchSink(RestTemplateBuilder restTemplateBuilder) {
-		RestTemplate restTemplate = restTemplateBuilder.build();
+	public RestTemplate restTemplate(RestTemplateBuilder builder){
+		return builder.build();
+	}
+
+	@Bean
+	public Consumer<Message<List<String>>> batchSink(RestTemplate restTemplate) {
 		return message -> {
 			LOG.info("Consuming batch of messages");
 			restTemplate.postForEntity("https://httpbin.org/post", message.getPayload(), String.class);
@@ -32,8 +36,7 @@ public class BatchHttpSinkApplication {
 	}
 
 	@Bean
-	public Consumer<Message<String>> singleSink(RestTemplateBuilder restTemplateBuilder) {
-		RestTemplate restTemplate = restTemplateBuilder.build();
+	public Consumer<Message<String>> singleSink(RestTemplate restTemplate) {
 		return message -> {
 			LOG.info("Consuming single message");
 			restTemplate.postForEntity("https://httpbin.org/post", message.getPayload(), String.class);
