@@ -23,4 +23,11 @@ public class BatchListener {
 		restTemplate.postForEntity("https://httpbin.org/post", messages, String.class);
 		LOG.info("Sent batch to http api in annotated method");
 	}
+
+	@KafkaListener(topics = "demo-input-topic", batch = "false", groupId = "annotated-consumer")
+	public void consumeSingle(String messages) {
+		LOG.info("Consuming message in annotated method");
+		restTemplate.postForEntity("https://httpbin.org/post", messages, String.class);
+		LOG.info("Sent to http api in annotated method");
+	}
 }
