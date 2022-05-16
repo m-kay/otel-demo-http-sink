@@ -1,0 +1,33 @@
+spring:
+  kafka:
+    bootstrap-servers: kafka:9092
+  cloud:
+    stream:
+      kafka:
+        binder:
+          consumer-properties:
+            key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            max.poll.records: 10
+        bindings:
+          batchSink-in-0:
+            consumer:
+              start-offset: earliest
+          singleSink-in-0:
+            consumer:
+              start-offset: earliest
+      bindings:
+        batchSink-in-0:
+          group: batch-consumer
+          content-type: text/plain
+          consumer:
+            batchMode: true
+          destination: demo-input-topic
+        singleSink-in-0:
+          group: single-consumer
+          content-type: text/plain
+          consumer:
+            batchMode: false
+          destination: demo-input-topic
+    function:
+      definition: batchSink;singleSink
